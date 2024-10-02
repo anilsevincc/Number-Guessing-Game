@@ -1,0 +1,334 @@
+public class Main {
+    public static void main(String[] args) {
+        Frame frame = new Frame();
+    }
+}
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.ArrayList;
+import java.util.Random;
+
+public class Frame extends JFrame implements MouseListener, ActionListener, KeyListener {
+
+    ImageIcon iconStart = new ImageIcon("start.png");
+    ImageIcon iconThinking = new ImageIcon("thinking.png");
+    ImageIcon iconTelephone = new ImageIcon("telephone.png");
+    ImageIcon iconOneFinger = new ImageIcon("one finger.png");
+    ImageIcon iconFindIt = new ImageIcon("findit.png");
+    ArrayList<ImageIcon> iconlist = new ArrayList<>();
+    int iconCount = 5;
+    ImageIcon iconBackground = new ImageIcon("background.jpg");
+    JLabel labelIconBackgroundStartPage;
+    JLabel labelIconBackgroundMainPage;
+    JPanel panelStartPage;
+    JPanel panelMainPage;
+    JLabel labelStartIcon;
+    JLabel labelTitle;
+    JLabel labelPlay;
+    JLabel labelExit;
+    JPanel panelMainRight;
+    JLabel labelIcon;
+    JPanel panelConversation;
+    JLabel labelConversation;
+    JLabel labelConversation2;
+    JPanel panelGuess;
+    JTextField textFieldGuess;
+    JButton buttonSubmit;
+    Random random = new Random();
+    int randomNumber;
+    int guess;
+    int tryCount;
+    boolean gameOver = false;
+    JLabel labelPlayAgain;
+    JLabel labelExitMainPage;
+
+    Frame() {
+
+        boolean playAgain = true;
+
+
+        this.setTitle("Number Guessing Game");
+        this.setSize(1250, 750);
+        this.setResizable(false);
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setLayout(null);
+
+        randomNumber = random.nextInt(100) + 1;
+        tryCount = 0;
+        gameOver = false;
+
+        iconlist.add(iconStart);
+        iconlist.add(iconTelephone);
+        iconlist.add(iconFindIt);
+        iconlist.add(iconOneFinger);
+        iconlist.add(iconThinking);
+
+        setupStartPage();
+        setupMainPage();
+
+        this.setVisible(true);
+
+
+    }
+
+    private void setupStartPage() {
+        panelStartPage = new JPanel();
+        panelStartPage.setBounds(0, 0, 1250, 750);
+        panelStartPage.setLayout(null);
+        panelStartPage.setBackground(Color.white);
+        panelStartPage.setVisible(true);
+
+
+        labelIconBackgroundStartPage = new JLabel();
+        labelIconBackgroundStartPage.setIcon(iconBackground);
+        labelIconBackgroundStartPage.setBounds(0, 0, iconBackground.getIconWidth(), iconBackground.getIconHeight());
+
+        labelIconBackgroundMainPage = new JLabel();
+        labelIconBackgroundMainPage.setIcon(iconBackground);
+        labelIconBackgroundMainPage.setBounds(0, 0, iconBackground.getIconWidth(), iconBackground.getIconHeight());
+
+        labelStartIcon = new JLabel();
+        labelStartIcon.setIcon(iconStart);
+        labelStartIcon.setBounds(120, 100, iconStart.getIconWidth(), iconStart.getIconHeight());
+        labelStartIcon.setVisible(true);
+
+        labelTitle = new JLabel();
+        labelTitle.setText("Number Guessing Game");
+        labelTitle.setFont(new Font("Arial", Font.PLAIN, 50));
+        labelTitle.setBackground(Color.black);
+        labelTitle.setForeground(Color.black);
+        labelTitle.setBounds(600, 100, 750, 100);
+        labelTitle.setVisible(true);
+
+        labelPlay = new JLabel();
+        labelPlay.setText("PLAY");
+        labelPlay.setFont(new Font("Arial", Font.PLAIN, 35));
+        labelPlay.setForeground(Color.black);
+        labelPlay.setBounds(850, 250, 750, 100);
+        labelPlay.addMouseListener(this);
+        labelPlay.setVisible(true);
+
+        labelExit = new JLabel();
+        labelExit.setText("EXIT");
+        labelExit.setFont(new Font("Arial", Font.PLAIN, 35));
+        labelExit.setForeground(Color.black);
+        labelExit.setBounds(850, 430, 750, 100);
+        labelExit.addMouseListener(this);
+        labelExit.setVisible(true);
+
+        panelStartPage.add(labelIconBackgroundStartPage);
+        panelStartPage.add(labelStartIcon);
+        panelStartPage.add(labelTitle);
+        panelStartPage.add(labelPlay);
+        panelStartPage.add(labelExit);
+        panelStartPage.setComponentZOrder(labelIconBackgroundStartPage, 4);
+
+        this.add(panelStartPage);
+
+    }
+
+    private void setupMainPage() {
+
+        panelMainPage = new JPanel();
+        panelMainPage.setBounds(0, 0, 1250, 750);
+        panelMainPage.setLayout(null);
+        panelMainPage.setBackground(Color.black);
+        panelMainPage.setVisible(false);
+
+        labelIcon = new JLabel();
+        labelIcon.setIcon(iconlist.get(random.nextInt(5)));
+        labelIcon.setBounds(120, 100, iconStart.getIconWidth(), iconStart.getIconHeight());
+        labelIcon.setVisible(true);
+
+        panelMainRight = new JPanel();
+        panelMainRight.setBounds(600, 50, 550, 600);
+        panelMainRight.setLayout(null);
+        panelMainRight.setBackground(Color.black);
+        panelMainRight.setOpaque(false);
+        panelMainRight.setVisible(true);
+
+
+        panelConversation = new JPanel();
+        panelConversation.setBackground(Color.black);
+        panelConversation.setBounds(25, 75, 500, 200);
+        panelConversation.setOpaque(false);
+        panelConversation.setLayout(new BoxLayout(panelConversation, BoxLayout.Y_AXIS));
+
+        labelConversation = new JLabel();
+        labelConversation.setText("I kept a number between 1 - 100!");
+        labelConversation.setFont(new Font("Arial", Font.PLAIN, 30));
+        labelConversation.setForeground(Color.black);
+        labelConversation.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        labelConversation2 = new JLabel();
+        labelConversation2.setText("Make your guess!");
+        labelConversation2.setFont(new Font("Arial", Font.PLAIN, 30));
+        labelConversation2.setForeground(Color.black);
+        labelConversation2.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        panelConversation.add(Box.createRigidArea(new Dimension(0, 10)));
+        panelConversation.add(labelConversation);
+        panelConversation.add(Box.createRigidArea(new Dimension(0, 15)));
+        panelConversation.add(labelConversation2);
+
+
+        panelGuess = new JPanel();
+        panelGuess.setBounds(125, 350, 300, 100);
+        panelGuess.setOpaque(false);
+        panelGuess.setLayout(new BoxLayout(panelGuess, BoxLayout.X_AXIS));
+        panelGuess.setBackground(Color.black);
+
+        textFieldGuess = new JTextField();
+        textFieldGuess.setPreferredSize(new Dimension(50, 25));
+        textFieldGuess.setMaximumSize(new Dimension(150, 50));
+        textFieldGuess.setText(null);
+        textFieldGuess.setFont(new Font("Arial", Font.PLAIN, 25));
+        textFieldGuess.setEditable(true);
+        textFieldGuess.setAlignmentY(Component.CENTER_ALIGNMENT);
+        textFieldGuess.addKeyListener(this);
+
+
+        buttonSubmit = new JButton();
+        buttonSubmit.setFont(new Font("Arial", Font.PLAIN, 15));
+        buttonSubmit.setText("GUESS");
+        buttonSubmit.setAlignmentY(Component.CENTER_ALIGNMENT);
+        buttonSubmit.addActionListener(this);
+
+        panelGuess.add(Box.createRigidArea(new Dimension(35, 0)));
+        panelGuess.add(textFieldGuess);
+        panelGuess.add(Box.createRigidArea(new Dimension(10, 0)));
+        panelGuess.add(buttonSubmit);
+
+        labelPlayAgain = new JLabel();
+        labelPlayAgain.setBounds(125,225,200,100);
+        labelPlayAgain.setText("Play Again");
+        labelPlayAgain.setFont(new Font("Arial", Font.PLAIN,25));
+        labelPlayAgain.setForeground(Color.black);
+        labelPlayAgain.setVisible(false);
+        labelPlayAgain.addMouseListener(this);
+
+        labelExitMainPage = new JLabel();
+        labelExitMainPage.setBounds(350,225,100,100);
+        labelExitMainPage.setText("Exit");
+        labelExitMainPage.setFont(new Font("Arial", Font.PLAIN,25));
+        labelExitMainPage.setForeground(Color.black);
+        labelExitMainPage.setVisible(false);
+        labelExitMainPage.addMouseListener(this);
+
+        panelMainRight.add(panelConversation);
+        panelMainRight.add(panelGuess);
+        panelMainRight.add(labelPlayAgain);
+        panelMainRight.add(labelExitMainPage);
+
+        panelMainPage.add(labelIconBackgroundMainPage);
+        panelMainPage.add(labelIcon);
+        panelMainPage.add(panelMainRight);
+        panelMainPage.setComponentZOrder(labelIconBackgroundMainPage, 2);
+
+        this.add(panelMainPage);
+
+
+    }
+
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        if (e.getSource() == labelPlay) {
+            panelStartPage.setVisible(false);
+            panelMainPage.setVisible(true);
+        } else if (e.getSource() == labelExit) {
+            System.exit(0);
+        }
+        if (e.getSource() == labelPlayAgain){
+            resetGame();
+        } else if (e.getSource() == labelExitMainPage) {
+            System.exit(0);
+        }
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == buttonSubmit) {
+            try {
+                guess = Integer.parseInt(textFieldGuess.getText());
+                if (guess < randomNumber) {
+                    labelConversation.setText("You are wrong!");
+                    labelConversation2.setText("Go higher!");
+                    tryCount++;
+                    labelIcon.setIcon(iconlist.get(random.nextInt(5)));
+                } else if (guess > randomNumber) {
+                    labelConversation.setText("You are wrong!");
+                    labelConversation2.setText("Go lower!");
+                    tryCount++;
+                    labelIcon.setIcon(iconlist.get(random.nextInt(5)));
+                } else if (guess == randomNumber) {
+                    labelConversation.setText("YOU WIN!");
+                    tryCount++;
+                    labelConversation2.setText("It took " + tryCount + " tries!");
+                    labelIcon.setIcon(iconlist.get(3));
+                    gameOver = true;
+
+                    labelPlayAgain.setVisible(true);
+                    labelExitMainPage.setVisible(true);
+
+                }
+            } catch (NumberFormatException exception) {
+                labelConversation.setText("It has to be a 'number' !");
+                labelConversation2.setText(null);
+            }
+        }
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+        if (e.getKeyChar() == KeyEvent.VK_ENTER) {
+            buttonSubmit.doClick();
+        }
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+
+    }
+
+    private void resetGame() {
+        randomNumber = random.nextInt(100) + 1;
+        tryCount = 0;
+        gameOver = false;
+        textFieldGuess.setText(null);
+        labelConversation.setText("I kept a number between 1 - 100!");
+        labelConversation2.setText("Make your guess!");
+        panelMainPage.setVisible(false);
+        panelStartPage.setVisible(true);
+        labelPlayAgain.setVisible(false);
+        labelExitMainPage.setVisible(false);
+    }
+}
+
